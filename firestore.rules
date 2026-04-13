@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Entries: users can only read/write their own entries
+    match /entries/{entryId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == resource.data.userId;
+
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.userId
+        && request.resource.data.keys().hasAll(['userId', 'date', 'cash', 'card', 'qr', 'total', 'createdAt'])
+        && request.resource.data.cash is number
+        && request.resource.data.card is number
+        && request.resource.data.qr is number
+        && request.resource.data.total is number
+        && request.resource.data.cash >= 0
+        && request.resource.data.card >= 0
+        && request.resource.data.qr >= 0;
+    }
+
+    // Goals: users can only access their own goals (ID = userId_YYYY-MM)
+    match /goals/{goalId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == resource.data.userId;
+
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.userId
+        && request.resource.data.monthlyGoal is number
+        && request.resource.data.monthlyGoal > 0;
+    }
+
+    // Deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

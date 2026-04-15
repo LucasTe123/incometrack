@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useForm } from 'react-hook-form';
+import { useForm, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, Banknote, CreditCard, QrCode, Check, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
@@ -37,8 +37,7 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
     reset,
     formState: { errors },
   } = useForm<EntryFormValues>({
-    // @ts-expect-error zod type mismatch
-    resolver: zodResolver(entrySchema),
+    resolver: zodResolver(entrySchema) as Resolver<EntryFormValues>,
     defaultValues: {
       date: format(new Date(), 'yyyy-MM-dd'),
       cash: 0,
@@ -78,19 +77,16 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
 
     try {
       if (navigator.onLine) {
-        // No usamos timeout manual, dejamos que Firebase maneje su propia red
         await addEntry(user.uid, input);
       } else {
         await enqueueOfflineEntry(user.uid, input);
       }
 
       setSaved(true);
-      // Damos tiempo a ver la animación de éxito antes de resetear
       setTimeout(() => closeAndReset(), 1000);
     } catch (err) {
       console.error('Failed to save entry:', err);
       setIsSubmitting(false);
-      // Opcional: Podrías mostrar un mensaje de error aquí
     }
   };
 
@@ -174,7 +170,6 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
 
                 {PAYMENT_FIELDS.map((field, i) => {
                   const Icon = field.icon;
-                  // Extraemos la ref de register para manejarla manualmente
                   const { ref, ...rest } = register(field.name);
 
                   return (
@@ -197,8 +192,8 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
                         <input
                           {...rest}
                           ref={(e) => {
-                            ref(e); // Registra el input en React Hook Form
-                            if (i === 0) firstInputRef.current = e; // Guarda ref para el focus inicial
+                            ref(e);
+                            if (i === 0) firstInputRef.current = e;
                           }}
                           type="number"
                           inputMode="decimal"

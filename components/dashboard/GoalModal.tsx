@@ -5,7 +5,7 @@
 
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useForm } from 'react-hook-form';
+import { useForm, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, Target } from 'lucide-react';
 import { setMonthlyGoal } from '@/lib/firestore';
@@ -24,9 +24,8 @@ export default function GoalModal({ isOpen, onClose }: Props) {
   const user = useAuthStore((s) => s.user);
   const { goal } = useGoalStore();
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<GoalFormValues, unknown, GoalFormValues>({
-    // @ts-expect-error zod v4 + @hookform/resolvers v5 type mismatch
-    resolver: zodResolver(goalSchema),
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<GoalFormValues>({
+    resolver: zodResolver(goalSchema) as Resolver<GoalFormValues>,
     defaultValues: { target: goal?.monthlyGoal ?? undefined },
   });
 

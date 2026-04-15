@@ -33,7 +33,7 @@ export default function OfflineBanner() {
           transition={{ duration: 0.25 }}
         >
           <WifiOff size={14} />
-          <span>You're offline — entries will sync when reconnected</span>
+          <span>Sin conexión — los registros se sincronizarán cuando vuelvas a conectarte</span>
         </motion.div>
       )}
     </AnimatePresence>

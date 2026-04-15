@@ -68,7 +68,7 @@ export default function GoalModal({ isOpen, onClose }: Props) {
                 </span>
                 <div>
                   <h2 style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: '1.125rem', letterSpacing: '-0.02em' }}>
-                    Monthly Goal
+                    Meta Mensual
                   </h2>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem' }}>
                     {formatMonthLabel(currentMonth())}
@@ -83,14 +83,14 @@ export default function GoalModal({ isOpen, onClose }: Props) {
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
               <div>
                 <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.8125rem', fontWeight: 500, marginBottom: '0.375rem' }}>
-                  Target Amount ($)
+                  Monto objetivo (Bs.)
                 </label>
                 <input
                   {...register('target', { valueAsNumber: true })}
                   type="number"
                   inputMode="decimal"
                   step="0.01"
-                  placeholder="e.g. 5000"
+                  placeholder="ej. 5000"
                   className="income-input"
                   style={{ paddingLeft: '1rem' }}
                   autoFocus
@@ -110,10 +110,10 @@ export default function GoalModal({ isOpen, onClose }: Props) {
                 {isSubmitting ? (
                   <span className="flex items-center gap-2">
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Saving...
+                    Guardando...
                   </span>
                 ) : (
-                  goal ? 'Update Goal' : 'Set Goal'
+                  goal ? 'Actualizar Meta' : 'Guardar Meta'
                 )}
               </motion.button>
             </form>

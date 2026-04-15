@@ -5,7 +5,7 @@
 
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, TrendingUp, DollarSign, Calendar, Zap } from 'lucide-react';
+import { Plus, TrendingUp, Calendar, Zap } from 'lucide-react';
 import { useEntryStore } from '@/store/entryStore';
 import { useGoalStore } from '@/store/goalStore';
 import { useAuthStore } from '@/store/authStore';
@@ -17,6 +17,7 @@ import QuickEntryModal from '@/components/entry/QuickEntryModal';
 import GoalModal from '@/components/dashboard/GoalModal';
 import { formatCurrency } from '@/utils/formatters';
 import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 export default function DashboardPage() {
   const [entryOpen, setEntryOpen] = useState(false);
@@ -32,42 +33,42 @@ export default function DashboardPage() {
 
   const greeting = () => {
     const h = new Date().getHours();
-    if (h < 12) return 'Good morning';
-    if (h < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (h < 12) return 'Buenos días';
+    if (h < 17) return 'Buenas tardes';
+    return 'Buenas noches';
   };
 
   return (
     <>
-      <div className="px-4 pt-6 pb-4 max-w-lg mx-auto">
+      <div className="px-5 pt-8 pb-6 max-w-lg mx-auto">
 
         {/* Header */}
         <motion.div
-          className="mb-6"
+          className="mb-8"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', fontWeight: 500 }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', fontWeight: 500 }}>
             {greeting()}{user?.displayName ? `, ${user.displayName.split(' ')[0]}` : ''}
           </p>
           <h1
             style={{
               color: 'var(--text-primary)',
-              fontSize: '1.75rem',
+              fontSize: '2rem',
               fontWeight: 800,
               letterSpacing: '-0.03em',
               lineHeight: 1.15,
-              marginTop: '2px',
+              marginTop: '4px',
             }}
           >
-            {format(new Date(), 'MMMM d')}
+            {format(new Date(), "d 'de' MMMM", { locale: es })}
           </h1>
         </motion.div>
 
         {/* Today's Hero Card */}
         <motion.div
-          className="rounded-3xl p-6 mb-4 relative overflow-hidden"
+          className="rounded-3xl p-7 mb-5 relative overflow-hidden"
           style={{
             background: 'linear-gradient(135deg, #3D1A78 0%, #1E1065 50%, #0F0A3C 100%)',
             border: '1px solid rgba(124,58,237,0.3)',
@@ -95,11 +96,11 @@ export default function DashboardPage() {
 
           <div className="relative">
             <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.8125rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Today's Income
+              Ingreso de Hoy
             </p>
             <motion.p
               className="money-display"
-              style={{ color: '#fff', marginTop: '0.25rem' }}
+              style={{ color: '#fff', marginTop: '0.375rem' }}
               key={todayTotal}
               initial={{ opacity: 0.7, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -108,25 +109,25 @@ export default function DashboardPage() {
               {isLoading ? '—' : formatCurrency(todayTotal)}
             </motion.p>
 
-            <div className="flex items-center gap-3 mt-4">
+            <div className="flex items-center gap-3 mt-5">
               <div className="flex items-center gap-1.5">
                 <Zap size={13} style={{ color: 'rgba(255,255,255,0.4)' }} />
                 <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem' }}>
-                  Week: {formatCurrency(weekTotal, 'USD', true)}
+                  Semana: {formatCurrency(weekTotal, 'BOB', true)}
                 </span>
               </div>
               <span style={{ color: 'rgba(255,255,255,0.2)' }}>•</span>
               <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem' }}>
-                Year: {formatCurrency(yearTotal, 'USD', true)}
+                Año: {formatCurrency(yearTotal, 'BOB', true)}
               </span>
             </div>
           </div>
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className="grid grid-cols-2 gap-4 mb-5">
           <StatCard
-            label="This Month"
+            label="Este Mes"
             amount={monthTotal}
             icon={Calendar}
             iconColor="#A78BFA"
@@ -135,7 +136,7 @@ export default function DashboardPage() {
             delay={0.1}
           />
           <StatCard
-            label="This Year"
+            label="Este Año"
             amount={yearTotal}
             icon={TrendingUp}
             iconColor="#60A5FA"
@@ -146,7 +147,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Goal Progress */}
-        <div className="mb-4">
+        <div className="mb-5">
           <GoalProgress
             monthTotal={monthTotal}
             goalAmount={goal?.monthlyGoal ?? null}
@@ -156,7 +157,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Mini Week Chart */}
-        <div className="mb-4">
+        <div className="mb-5">
           <MiniWeekChart />
         </div>
 
@@ -171,7 +172,7 @@ export default function DashboardPage() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', damping: 18, stiffness: 260, delay: 0.4 }}
         whileTap={{ scale: 0.92 }}
-        aria-label="Add income entry"
+        aria-label="Agregar ingreso"
       >
         <Plus size={26} strokeWidth={2.5} />
       </motion.button>

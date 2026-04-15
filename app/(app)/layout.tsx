@@ -30,7 +30,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="min-h-dvh flex items-center justify-center" style={{ background: 'var(--bg-base)' }}>
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 rounded-full gradient-accent flex items-center justify-center animate-pulse" />
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Loading...</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Cargando...</p>
         </div>
       </div>
     );

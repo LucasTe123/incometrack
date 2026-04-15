@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, Receipt } from 'lucide-react';
 import { useEntryStore } from '@/store/entryStore';
 import { filterByRange, groupEntriesByDate, formatDisplayDate } from '@/utils/dateUtils';
+import { formatCurrency } from '@/utils/formatters';
 import EntryRow from '@/components/history/EntryRow';
 import EmptyState from '@/components/shared/EmptyState';
 import { IncomeEntry } from '@/types';
@@ -15,9 +16,9 @@ import { IncomeEntry } from '@/types';
 type Range = 'week' | 'month' | 'year';
 
 const TABS: { id: Range; label: string }[] = [
-  { id: 'week', label: 'Week' },
-  { id: 'month', label: 'Month' },
-  { id: 'year', label: 'Year' },
+  { id: 'week', label: 'Semana' },
+  { id: 'month', label: 'Mes' },
+  { id: 'year', label: 'Año' },
 ];
 
 export default function HistoryPage() {
@@ -42,10 +43,10 @@ export default function HistoryPage() {
         </div>
         <div>
           <h1 style={{ color: 'var(--text-primary)', fontSize: '1.375rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
-            History
+            Historial
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem' }}>
-            {filtered.length} {filtered.length === 1 ? 'entry' : 'entries'}
+            {filtered.length} {filtered.length === 1 ? 'registro' : 'registros'}
           </p>
         </div>
       </motion.div>
@@ -90,8 +91,8 @@ export default function HistoryPage() {
       {!isLoading && filtered.length === 0 && (
         <EmptyState
           icon={Receipt}
-          title="No entries yet"
-          description={`No income recorded for this ${range}. Tap + to add your first entry.`}
+          title="Sin registros"
+          description={`No hay ingresos en este período. Tocá + para agregar tu primer registro.`}
         />
       )}
 
@@ -116,7 +117,7 @@ export default function HistoryPage() {
                       {formatDisplayDate(date)}
                     </p>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', fontWeight: 700 }}>
-                      ${dayTotal.toFixed(2)}
+                      {formatCurrency(dayTotal)}
                     </p>
                   </div>
 

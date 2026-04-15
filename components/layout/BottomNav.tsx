@@ -8,10 +8,10 @@ import { usePathname } from 'next/navigation';
 import { Home, BarChart2, Clock, Settings } from 'lucide-react';
 
 const navItems = [
-  { href: '/dashboard', label: 'Home', icon: Home },
-  { href: '/analytics', label: 'Analytics', icon: BarChart2 },
-  { href: '/history', label: 'History', icon: Clock },
-  { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/dashboard', label: 'Inicio', icon: Home },
+  { href: '/analytics', label: 'Análisis', icon: BarChart2 },
+  { href: '/history', label: 'Historial', icon: Clock },
+  { href: '/settings', label: 'Ajustes', icon: Settings },
 ];
 
 export default function BottomNav() {

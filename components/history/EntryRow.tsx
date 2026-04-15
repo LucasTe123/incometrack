@@ -20,7 +20,7 @@ export default function EntryRow({ entry }: Props) {
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!confirm('Delete this entry?')) return;
+    if (!confirm('¿Eliminar este registro?')) return;
     setDeleting(true);
     try {
       await deleteEntry(entry.id);
@@ -56,17 +56,17 @@ export default function EntryRow({ entry }: Props) {
           <div className="flex items-center gap-1.5">
             {entry.cash > 0 && (
               <span className="stat-badge" style={{ color: '#34D399', background: 'rgba(16,185,129,0.08)' }}>
-                ${entry.cash.toFixed(0)}
+                Bs. {entry.cash.toFixed(0)}
               </span>
             )}
             {entry.card > 0 && (
               <span className="stat-badge" style={{ color: '#60A5FA', background: 'rgba(96,165,250,0.08)' }}>
-                ${entry.card.toFixed(0)}
+                Bs. {entry.card.toFixed(0)}
               </span>
             )}
             {entry.qr > 0 && (
               <span className="stat-badge" style={{ color: '#A78BFA', background: 'rgba(167,139,250,0.08)' }}>
-                ${entry.qr.toFixed(0)}
+                Bs. {entry.qr.toFixed(0)}
               </span>
             )}
           </div>
@@ -91,14 +91,14 @@ export default function EntryRow({ entry }: Props) {
                 <div className="flex gap-4">
                   <div className="flex items-center gap-1.5">
                     <Banknote size={14} style={{ color: '#34D399' }} />
-                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.8125rem' }}>Cash</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.8125rem' }}>Efectivo</span>
                     <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.875rem' }}>
                       {formatCurrency(entry.cash)}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <CreditCard size={14} style={{ color: '#60A5FA' }} />
-                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.8125rem' }}>Card</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.8125rem' }}>Tarjeta</span>
                     <span style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.875rem' }}>
                       {formatCurrency(entry.card)}
                     </span>

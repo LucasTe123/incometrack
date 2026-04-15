@@ -52,10 +52,10 @@ export default function GoalProgress({
           </span>
           <div>
             <p style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.9375rem' }}>
-              Set a monthly goal
+              Establecer meta mensual
             </p>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem' }}>
-              Track your progress toward a target
+              Seguí tu progreso hacia un objetivo
             </p>
           </div>
         </div>
@@ -83,7 +83,7 @@ export default function GoalProgress({
           onClick={onSetGoal}
           style={{ color: '#A78BFA', fontSize: '0.8125rem', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
         >
-          Edit
+          Editar
         </button>
       </div>
 
@@ -106,10 +106,10 @@ export default function GoalProgress({
       <div className="flex items-center justify-between">
         <div className="flex items-baseline gap-1">
           <span style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: '1rem' }}>
-            {formatCurrency(monthTotal, 'USD', true)}
+            {formatCurrency(monthTotal, 'BOB', true)}
           </span>
           <span style={{ color: 'var(--text-muted)', fontSize: '0.8125rem' }}>
-            of {formatCurrency(goalAmount, 'USD', true)}
+            de {formatCurrency(goalAmount!, 'BOB', true)}
           </span>
         </div>
         <span
@@ -126,7 +126,7 @@ export default function GoalProgress({
 
       {percent < 100 && (
         <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem', marginTop: '0.5rem' }}>
-          {formatCurrency(remaining, 'USD', true)} remaining
+          Faltan {formatCurrency(remaining, 'BOB', true)}
         </p>
       )}
 
@@ -137,7 +137,7 @@ export default function GoalProgress({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          🎯 Goal achieved!
+          🎯 ¡Meta alcanzada!
         </motion.p>
       )}
     </motion.div>

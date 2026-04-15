@@ -2,41 +2,45 @@
 // utils/formatters.ts
 
 /**
- * Format a number as currency (default: USD).
- * Uses compact notation for very large numbers (e.g. $1.2M).
+ * Format a number as Bolivianos (Bs.).
+ * Uses compact notation for very large numbers (e.g. Bs. 1.2M).
  */
 export function formatCurrency(
   amount: number,
-  currency = 'USD',
+  _currency = 'BOB',
   compact = false
 ): string {
   try {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency,
-      notation: compact ? 'compact' : 'standard',
-      maximumFractionDigits: compact ? 1 : 2,
-    }).format(amount);
+    const n = Number(amount) || 0;
+    if (compact) {
+      if (n >= 1_000_000) return `Bs. ${(n / 1_000_000).toFixed(1)}M`;
+      if (n >= 1_000) return `Bs. ${(n / 1_000).toFixed(1)}K`;
+      return `Bs. ${n.toFixed(0)}`;
+    }
+    return `Bs. ${new Intl.NumberFormat('es-BO', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(n)}`;
   } catch {
-    return `$${amount.toFixed(2)}`;
+    return `Bs. ${amount.toFixed(2)}`;
   }
 }
 
 /**
- * Format a large number with commas.
+ * Format a large number with dots as thousands separator (es-BO style).
  */
 export function formatNumber(n: number): string {
-  return new Intl.NumberFormat('en-US').format(n);
+  return new Intl.NumberFormat('es-BO').format(n);
 }
 
 /**
- * Format a month string "YYYY-MM" → "January 2026".
+ * Format a month string "YYYY-MM" → "Enero 2026" (Spanish).
  */
 export function formatMonthLabel(month: string): string {
   try {
     const [year, m] = month.split('-');
     const date = new Date(parseInt(year), parseInt(m) - 1, 1);
-    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    return date.toLocaleDateString('es-BO', { month: 'long', year: 'numeric' });
   } catch {
     return month;
   }

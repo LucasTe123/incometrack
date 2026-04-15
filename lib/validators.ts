@@ -1,22 +1,23 @@
-// Zod v4 validation schemas
 // lib/validators.ts
-
 import { z } from 'zod';
+
+const toNum = (val: unknown): number => {
+  if (val === '' || val === null || val === undefined) return 0;
+  const n = Number(val);
+  return isNaN(n) ? 0 : n;
+};
 
 export const entrySchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be YYYY-MM-DD'),
-  cash: z.coerce.number().min(0, 'Cash cannot be negative').max(1_000_000, 'Value too large'),
-  card: z.coerce.number().min(0, 'Card cannot be negative').max(1_000_000, 'Value too large'),
-  qr: z.coerce.number().min(0, 'QR cannot be negative').max(1_000_000, 'Value too large'),
+  cash: z.preprocess(toNum, z.number().min(0).max(1_000_000)),
+  card: z.preprocess(toNum, z.number().min(0).max(1_000_000)),
+  qr: z.preprocess(toNum, z.number().min(0).max(1_000_000)),
 });
 
 export type EntryFormValues = z.infer<typeof entrySchema>;
 
 export const goalSchema = z.object({
-  target: z.coerce
-    .number()
-    .min(1, 'Goal must be at least 1')
-    .max(100_000_000, 'Value too large'),
+  target: z.coerce.number().min(1).max(100_000_000),
 });
 
 export type GoalFormValues = z.infer<typeof goalSchema>;

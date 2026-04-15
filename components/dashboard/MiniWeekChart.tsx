@@ -54,7 +54,7 @@ export default function MiniWeekChart() {
       transition={{ duration: 0.4, delay: 0.3 }}
     >
       <p style={{ color: 'var(--text-secondary)', fontSize: '0.8125rem', fontWeight: 500, marginBottom: '0.875rem' }}>
-        This Week
+        Esta Semana
       </p>
       <div style={{ height: 80 }}>
         <ResponsiveContainer width="100%" height="100%">

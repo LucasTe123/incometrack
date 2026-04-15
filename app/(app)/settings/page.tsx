@@ -114,13 +114,13 @@ export default function SettingsPage() {
             <Settings size={18} color="white" />
           </div>
           <h1 style={{ color: 'var(--text-primary)', fontSize: '1.375rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
-            Settings
+            Ajustes
           </h1>
         </motion.div>
 
         {/* Account */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-          <SettingGroup title="Account">
+          <SettingGroup title="Cuenta">
             <SettingRow
               icon={<User size={16} style={{ color: '#60A5FA' }} />}
               iconBg="rgba(96,165,250,0.1)"
@@ -132,13 +132,13 @@ export default function SettingsPage() {
 
         {/* Goals */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <SettingGroup title="Goals">
+          <SettingGroup title="Metas">
             <SettingRow
               icon={<Target size={16} style={{ color: '#A78BFA' }} />}
               iconBg="rgba(167,139,250,0.1)"
-              label="Monthly Goal"
+              label="Meta Mensual"
               subtitle={formatMonthLabel(currentMonth())}
-              value={goal?.monthlyGoal ? formatCurrency(goal.monthlyGoal, 'USD', true) : 'Not set'}
+              value={goal?.monthlyGoal ? formatCurrency(goal.monthlyGoal, 'BOB', true) : 'Sin definir'}
               onClick={() => setGoalOpen(true)}
             />
           </SettingGroup>
@@ -146,30 +146,30 @@ export default function SettingsPage() {
 
         {/* App */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-          <SettingGroup title="App">
+          <SettingGroup title="Aplicación">
             <SettingRow
               icon={<Smartphone size={16} style={{ color: '#10B981' }} />}
               iconBg="rgba(16,185,129,0.1)"
-              label="PWA Installed"
-              subtitle="Works offline with automatic sync"
+              label="PWA Instalada"
+              subtitle="Funciona sin conexión con sincronización automática"
             />
             <div className="divider mx-4" />
             <SettingRow
               icon={<Shield size={16} style={{ color: '#F59E0B' }} />}
               iconBg="rgba(245,158,11,0.1)"
-              label="Data Security"
-              subtitle="End-to-end isolated to your account"
+              label="Seguridad de Datos"
+              subtitle="Datos aislados y protegidos por tu cuenta"
             />
           </SettingGroup>
         </motion.div>
 
         {/* Sign Out */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <SettingGroup title="Session">
+          <SettingGroup title="Sesión">
             <SettingRow
               icon={<LogOut size={16} style={{ color: '#EF4444' }} />}
               iconBg="rgba(239,68,68,0.1)"
-              label="Sign Out"
+              label="Cerrar Sesión"
               onClick={handleSignOut}
               danger
             />

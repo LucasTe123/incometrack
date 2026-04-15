@@ -16,6 +16,7 @@ import {
 } from '@/utils/dateUtils';
 import { formatCurrency } from '@/utils/formatters';
 import { format, parseISO } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 // Lazy load charts
 const WeeklyBarChart = dynamic(() => import('@/components/charts/WeeklyBarChart'), {
@@ -56,14 +57,14 @@ export default function AnalyticsPage() {
   const { monthTotal, yearTotal, weekTotal } = useMemo(() => calculateTotals(entries), [entries]);
 
   const formatBestDay = (date: string) => {
-    try { return format(parseISO(date), 'MMMM d, yyyy'); }
+    try { return format(parseISO(date), "d 'de' MMMM 'de' yyyy", { locale: es }); }
     catch { return date; }
   };
 
   const formatBestMonth = (month: string) => {
     try {
       const [y, m] = month.split('-');
-      return format(new Date(+y, +m - 1, 1), 'MMMM yyyy');
+      return format(new Date(+y, +m - 1, 1), "MMMM yyyy", { locale: es });
     } catch { return month; }
   };
 
@@ -82,9 +83,9 @@ export default function AnalyticsPage() {
         </div>
         <div>
           <h1 style={{ color: 'var(--text-primary)', fontSize: '1.375rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
-            Analytics
+            Análisis
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem' }}>Your income insights</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem' }}>Resumen de tus ingresos</p>
         </div>
       </motion.div>
 
@@ -96,14 +97,14 @@ export default function AnalyticsPage() {
         transition={{ duration: 0.4, delay: 0.05 }}
       >
         {[
-          { label: 'This Week', value: weekTotal },
-          { label: 'This Month', value: monthTotal },
-          { label: 'This Year', value: yearTotal },
+          { label: 'Esta Semana', value: weekTotal },
+          { label: 'Este Mes', value: monthTotal },
+          { label: 'Este Año', value: yearTotal },
         ].map(({ label, value }) => (
           <div key={label} className="glass-card p-3 text-center">
             <p style={{ color: 'var(--text-muted)', fontSize: '0.6875rem', fontWeight: 500 }}>{label}</p>
             <p style={{ color: 'var(--text-primary)', fontSize: '1rem', fontWeight: 700, marginTop: '2px', letterSpacing: '-0.01em' }}>
-              {isLoading ? '—' : formatCurrency(value, 'USD', true)}
+              {isLoading ? '—' : formatCurrency(value, 'BOB', true)}
             </p>
           </div>
         ))}
@@ -122,11 +123,11 @@ export default function AnalyticsPage() {
               <div className="flex items-center gap-1.5 mb-2">
                 <Star size={13} style={{ color: '#F59E0B' }} />
                 <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  Best Day
+                  Mejor Día
                 </span>
               </div>
               <p style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: '1rem' }}>
-                {formatCurrency(bestDay.total, 'USD', true)}
+                {formatCurrency(bestDay.total, 'BOB', true)}
               </p>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', marginTop: '2px' }}>
                 {formatBestDay(bestDay.date)}
@@ -138,11 +139,11 @@ export default function AnalyticsPage() {
               <div className="flex items-center gap-1.5 mb-2">
                 <Award size={13} style={{ color: '#A78BFA' }} />
                 <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  Best Month
+                  Mejor Mes
                 </span>
               </div>
               <p style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: '1rem' }}>
-                {formatCurrency(bestMonth.total, 'USD', true)}
+                {formatCurrency(bestMonth.total, 'BOB', true)}
               </p>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', marginTop: '2px' }}>
                 {formatBestMonth(bestMonth.month)}
@@ -159,7 +160,7 @@ export default function AnalyticsPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.15 }}
       >
-        <SectionHeader title="Weekly Breakdown" subtitle="Cash · Card · QR" />
+        <SectionHeader title="Resumen Semanal" subtitle="Efectivo · Tarjeta · QR" />
         <WeeklyBarChart data={weeklyData} />
       </motion.div>
 
@@ -170,7 +171,7 @@ export default function AnalyticsPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.2 }}
       >
-        <SectionHeader title="Monthly Overview" subtitle={`${new Date().getFullYear()}`} />
+        <SectionHeader title="Resumen Mensual" subtitle={`${new Date().getFullYear()}`} />
         <MonthlyBarChart data={monthlyData} />
       </motion.div>
 
@@ -182,7 +183,7 @@ export default function AnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.25 }}
         >
-          <SectionHeader title="Payment Methods" />
+          <SectionHeader title="Métodos de Pago" />
           <PaymentBreakdown entries={entries} />
         </motion.div>
       )}

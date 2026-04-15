@@ -1,11 +1,9 @@
-// Quick Entry Modal — the core feature
 // components/entry/QuickEntryModal.tsx
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, Banknote, CreditCard, QrCode, Check, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
@@ -21,8 +19,8 @@ interface Props {
 }
 
 const PAYMENT_FIELDS = [
-  { name: 'cash' as const, label: 'Cash', icon: Banknote, color: '#10B981', bg: 'rgba(16,185,129,0.08)' },
-  { name: 'card' as const, label: 'Card', icon: CreditCard, color: '#60A5FA', bg: 'rgba(96,165,250,0.08)' },
+  { name: 'cash' as const, label: 'Efectivo', icon: Banknote, color: '#10B981', bg: 'rgba(16,185,129,0.08)' },
+  { name: 'card' as const, label: 'Tarjeta', icon: CreditCard, color: '#60A5FA', bg: 'rgba(96,165,250,0.08)' },
   { name: 'qr' as const, label: 'QR / Digital', icon: QrCode, color: '#A78BFA', bg: 'rgba(167,139,250,0.08)' },
 ];
 
@@ -38,8 +36,8 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
     watch,
     reset,
     formState: { errors },
-  } = useForm<EntryFormValues, unknown, EntryFormValues>({
-    // @ts-expect-error zod v4 + @hookform/resolvers v5 type mismatch
+  } = useForm<EntryFormValues>({
+    // @ts-expect-error zod type mismatch
     resolver: zodResolver(entrySchema),
     defaultValues: {
       date: format(new Date(), 'yyyy-MM-dd'),
@@ -49,17 +47,23 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
     },
   });
 
-  const cash = watch('cash') || 0;
-  const card = watch('card') || 0;
-  const qr = watch('qr') || 0;
-  const liveTotal = (Number(cash) || 0) + (Number(card) || 0) + (Number(qr) || 0);
+  const cash = Number(watch('cash')) || 0;
+  const card = Number(watch('card')) || 0;
+  const qr = Number(watch('qr')) || 0;
+  const liveTotal = cash + card + qr;
 
-  // Focus first input when opened
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => firstInputRef.current?.focus(), 300);
     }
   }, [isOpen]);
+
+  const closeAndReset = () => {
+    setSaved(false);
+    setIsSubmitting(false);
+    reset({ date: format(new Date(), 'yyyy-MM-dd'), cash: 0, card: 0, qr: 0 });
+    onClose();
+  };
 
   const onSubmit = async (data: EntryFormValues) => {
     if (!user) return;
@@ -74,20 +78,19 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
 
     try {
       if (navigator.onLine) {
+        // No usamos timeout manual, dejamos que Firebase maneje su propia red
         await addEntry(user.uid, input);
       } else {
         await enqueueOfflineEntry(user.uid, input);
       }
+
       setSaved(true);
-      setTimeout(() => {
-        setSaved(false);
-        reset({ date: format(new Date(), 'yyyy-MM-dd'), cash: 0, card: 0, qr: 0 });
-        onClose();
-      }, 900);
+      // Damos tiempo a ver la animación de éxito antes de resetear
+      setTimeout(() => closeAndReset(), 1000);
     } catch (err) {
       console.error('Failed to save entry:', err);
-    } finally {
       setIsSubmitting(false);
+      // Opcional: Podrías mostrar un mensaje de error aquí
     }
   };
 
@@ -95,7 +98,6 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             className="modal-backdrop"
             initial={{ opacity: 0 }}
@@ -105,7 +107,6 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
             onClick={onClose}
             style={{ zIndex: 50 }}
           >
-            {/* Panel — prevents click from closing when tapping the form */}
             <motion.div
               className="modal-panel"
               initial={{ y: 48, opacity: 0 }}
@@ -115,15 +116,13 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
               onClick={(e) => e.stopPropagation()}
               style={{ maxWidth: 480, width: '100%', position: 'relative' }}
             >
-              {/* Handle bar */}
               <div className="w-10 h-1 rounded-full mx-auto mb-5"
                 style={{ background: 'rgba(255,255,255,0.12)' }} />
 
-              {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-                    Add Income
+                    Agregar Ingreso
                   </h2>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <Calendar size={13} style={{ color: 'var(--text-muted)' }} />
@@ -144,8 +143,6 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
                   background: 'linear-gradient(135deg, rgba(124,58,237,0.12) 0%, rgba(79,70,229,0.08) 100%)',
                   border: '1px solid rgba(124,58,237,0.18)',
                 }}
-                animate={{ scale: liveTotal > 0 ? [1, 1.01, 1] : 1 }}
-                transition={{ duration: 0.2 }}
               >
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                   Total
@@ -163,10 +160,9 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
 
               {/* Form */}
               <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-                {/* Date */}
                 <div>
                   <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.8125rem', fontWeight: 500, marginBottom: '0.375rem' }}>
-                    Date
+                    Fecha
                   </label>
                   <input
                     {...register('date')}
@@ -176,9 +172,11 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
                   />
                 </div>
 
-                {/* Payment Fields */}
                 {PAYMENT_FIELDS.map((field, i) => {
                   const Icon = field.icon;
+                  // Extraemos la ref de register para manejarla manualmente
+                  const { ref, ...rest } = register(field.name);
+
                   return (
                     <motion.div
                       key={field.name}
@@ -197,14 +195,15 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
                           <Icon size={15} style={{ color: field.color }} />
                         </span>
                         <input
-                          {...register(field.name, { valueAsNumber: true })}
-                          ref={i === 0 ? (e) => {
-                            (register(field.name, { valueAsNumber: true }).ref as any)(e);
-                            (firstInputRef as any).current = e;
-                          } : undefined}
+                          {...rest}
+                          ref={(e) => {
+                            ref(e); // Registra el input en React Hook Form
+                            if (i === 0) firstInputRef.current = e; // Guarda ref para el focus inicial
+                          }}
                           type="number"
                           inputMode="decimal"
                           step="0.01"
+                          min="0"
                           placeholder="0.00"
                           className="income-input"
                         />
@@ -218,7 +217,6 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
                   );
                 })}
 
-                {/* Save Button */}
                 <motion.button
                   type="submit"
                   className="btn-primary mt-2"
@@ -236,7 +234,7 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
                         exit={{ opacity: 0 }}
                       >
                         <Check size={18} strokeWidth={2.5} />
-                        Saved!
+                        ¡Guardado!
                       </motion.span>
                     ) : isSubmitting ? (
                       <motion.span
@@ -246,11 +244,11 @@ export default function QuickEntryModal({ isOpen, onClose }: Props) {
                         animate={{ opacity: 1 }}
                       >
                         <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        Saving...
+                        Guardando...
                       </motion.span>
                     ) : (
                       <motion.span key="save" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                        Save Entry
+                        Guardar Registro
                       </motion.span>
                     )}
                   </AnimatePresence>

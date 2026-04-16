@@ -1,6 +1,4 @@
-// Firebase Configuration
 // lib/firebase.ts
-
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
@@ -14,17 +12,21 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Prevent duplicate initialization in development (hot reload)
 let app: FirebaseApp;
 let auth: Auth;
 let db: Firestore;
 
-if (typeof window !== 'undefined' || process.env.NODE_ENV !== 'test') {
+// Solo inicializamos si estamos en el navegador (window definido)
+if (typeof window !== 'undefined') {
   app = getApps().length ? getApp() : initializeApp(firebaseConfig);
   auth = getAuth(app);
   db = getFirestore(app);
+} else {
+  // Mock objects para evitar errores durante el build de Next.js
+  app = {} as FirebaseApp;
+  auth = {} as Auth;
+  db = {} as Firestore;
 }
 
-// @ts-ignore — will always be initialized in browser context
 export { auth, db };
-export default app!;
+export default app;

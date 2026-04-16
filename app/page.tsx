@@ -1,8 +1,5 @@
-// Root redirect page
-// app/page.tsx
+import LoginFormClient from '@/components/LoginFormClient';
 
-import { redirect } from 'next/navigation';
-
-export default function RootPage() {
-  redirect('/dashboard');
+export default function LoginPage() {
+  return <LoginFormClient />;
 }

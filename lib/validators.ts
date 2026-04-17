@@ -33,3 +33,9 @@ export const registerSchema = authSchema.extend({
 
 export type AuthFormValues = z.infer<typeof authSchema>;
 export type RegisterFormValues = z.infer<typeof registerSchema>;
+// Nuevo esquema para Siri en lib/validators.ts
+export const siriRequestSchema = z.object({
+  texto: z.string().min(1),
+  userId: z.string().min(1),
+  token: z.string().min(1),
+});

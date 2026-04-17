@@ -10,7 +10,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         // 1. Validar la entrada del Atajo
         const { texto, userId, token } = siriRequestSchema.parse(req.body);
-
+        // Temporalmente, cambia la línea de validación por esto:
+        console.log("Token recibido:", token);
+        console.log("Token esperado:", process.env.SIRI_SECRET_TOKEN);
         // Seguridad simple: Verifica un token secreto que tú pongas en tus variables de Netlify
         if (token !== process.env.SIRI_SECRET_TOKEN) {
             return res.status(401).json({ error: 'No autorizado' });

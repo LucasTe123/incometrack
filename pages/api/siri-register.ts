@@ -41,8 +41,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         return res.status(200).json({ success: true, total });
 
-    } catch (error) {
-        console.error(error);
-        return res.status(400).json({ error: 'Error en validación o proceso de IA' });
+    } catch (error: any) {
+        // Esto imprimirá el error real en los logs de Netlify
+        console.error("DETALLE DEL ERROR:", error);
+
+        // Esto enviará el error real a la pantalla de tu iPhone
+        return res.status(400).json({
+            error: 'Error interno',
+            detalle: error.message || error.toString()
+        });
     }
 }

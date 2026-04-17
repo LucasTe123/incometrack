@@ -5,7 +5,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function parseVentasConIA(dictado: string) {
     // Usamos gemini-1.5-flash por ser más rápido y estable
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `
     Extrae los montos de ventas del siguiente texto: "${dictado}".

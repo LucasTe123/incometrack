@@ -30,7 +30,7 @@ export default function BottomNav() {
     >
       <div className="flex items-center justify-around px-2 py-2 max-w-lg mx-auto">
         {navItems.map(({ href, label, icon: Icon }) => {
-          const isActive = pathname === href || pathname.startsWith(href + '/');
+          const isActive = pathname === href || (pathname?.startsWith(href + '/') ?? false);
           return (
             <Link key={href} href={href} className="nav-item" data-active={isActive}
               style={{

@@ -22,11 +22,21 @@ export async function parseVentasConIA(dictado: string) {
         })
     });
 
+    // ... (arriba queda igual, el fetch)
+
     const data = await response.json();
 
-    if (!data.choices || !data.choices[0]) {
-        throw new Error("OpenRouter falló o no devolvió texto");
+    // --- ESTO ES LO NUEVO PARA DEBUGEAR ---
+    // Si OpenRouter manda un error oficial, lo mostramos en la pantalla
+    if (data.error) {
+        throw new Error(`OpenRouter dice: ${data.error.message || JSON.stringify(data.error)}`);
     }
+
+    if (!data.choices || !data.choices[0]) {
+        // Si manda algo raro que no es error pero tampoco texto, mostramos qué es
+        throw new Error(`Respuesta rara: ${JSON.stringify(data)}`);
+    }
+    // --------------------------------------
 
     const rawText = data.choices[0].message.content;
 

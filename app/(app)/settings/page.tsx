@@ -11,6 +11,7 @@ import { useGoalStore } from '@/store/goalStore';
 import { signOut } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 import GoalModal from '@/components/dashboard/GoalModal';
+import SiriSetup from '@/components/SiriSetup';
 import { formatCurrency } from '@/utils/formatters';
 import { currentMonth } from '@/utils/dateUtils';
 import { formatMonthLabel } from '@/utils/formatters';
@@ -143,6 +144,10 @@ export default function SettingsPage() {
             />
           </SettingGroup>
         </motion.div>
+        {/* CONFIGURACIÓN DE SIRI */}
+<div className="mb-20"> 
+  <SiriSetup />
+</div>
 
         {/* App */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>

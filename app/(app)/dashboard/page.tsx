@@ -15,7 +15,6 @@ import GoalProgress from '@/components/dashboard/GoalProgress';
 import MiniWeekChart from '@/components/dashboard/MiniWeekChart';
 import QuickEntryModal from '@/components/entry/QuickEntryModal';
 import GoalModal from '@/components/dashboard/GoalModal';
-import SiriSetup from '@/components/SiriSetup';
 import { formatCurrency } from '@/utils/formatters';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -158,13 +157,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Mini Week Chart */}
-        <div className="mb-5">
-          <MiniWeekChart />
-        </div>
-
-        {/* CONFIGURACIÓN DE SIRI */}
-        <div className="mb-20"> 
-          <SiriSetup />
+        <div className="mb-5">
+          <MiniWeekChart />
         </div>
 
       </div>
